@@ -24,8 +24,8 @@ class RepositoryVerifierTests(unittest.TestCase):
 
     def test_active_query_cannot_restore_broad_vitamin_d_branch(self):
         def mutate(bundle):
-            query = bundle["amendment"]["pubmed"]["query_families"]["recent-q1-measurement"]
-            bundle["amendment"]["pubmed"]["query_families"]["recent-q1-measurement"] = query.replace(
+            query = bundle["selection_amendment"]["pubmed"]["query_families"]["recent-q1-measurement"]
+            bundle["selection_amendment"]["pubmed"]["query_families"]["recent-q1-measurement"] = query.replace(
                 '"25-hydroxyvitamin D"[Title]',
                 '"Vitamin D"[MeSH Terms] OR "25-hydroxyvitamin D"[Title]',
                 1,
@@ -35,8 +35,8 @@ class RepositoryVerifierTests(unittest.TestCase):
 
     def test_active_query_requires_meta_analysis_gate(self):
         self.rejects(
-            lambda b: b["amendment"]["pubmed"]["query_families"].update(
-                {"recent-q2-distribution": b["amendment"]["pubmed"]["query_families"]["recent-q2-distribution"].replace(
+            lambda b: b["selection_amendment"]["pubmed"]["query_families"].update(
+                {"recent-q2-distribution": b["selection_amendment"]["pubmed"]["query_families"]["recent-q2-distribution"].replace(
                     '(meta-analy*[Title] OR "systematic review"[Title])',
                     'review*[Title/Abstract]',
                 )}
@@ -46,18 +46,24 @@ class RepositoryVerifierTests(unittest.TestCase):
 
     def test_active_query_requires_specimen_terms(self):
         self.rejects(
-            lambda b: b["amendment"]["pubmed"]["query_families"].update(
-                {"recent-q3-outcome-thresholds": b["amendment"]["pubmed"]["query_families"]["recent-q3-outcome-thresholds"].replace("plasma[Title/Abstract] OR ", "")}
+            lambda b: b["selection_amendment"]["pubmed"]["query_families"].update(
+                {"recent-q3-outcome-thresholds": b["selection_amendment"]["pubmed"]["query_families"]["recent-q3-outcome-thresholds"].replace("plasma[Title/Abstract] OR ", "")}
             ),
             "active query lacks specimen core: recent-q3-outcome-thresholds",
         )
 
     def test_active_query_requires_abstract(self):
         self.rejects(
-            lambda b: b["amendment"]["pubmed"]["query_families"].update(
-                {"recent-q1-measurement": b["amendment"]["pubmed"]["query_families"]["recent-q1-measurement"].replace(" AND hasabstract", "")}
+            lambda b: b["selection_amendment"]["pubmed"]["query_families"].update(
+                {"recent-q1-measurement": b["selection_amendment"]["pubmed"]["query_families"]["recent-q1-measurement"].replace(" AND hasabstract", "")}
             ),
             "active query lacks abstract gate: recent-q1-measurement",
+        )
+
+    def test_active_amendment_forbids_canonical_abstract_text(self):
+        self.rejects(
+            lambda b: b["amendment"]["abstract_storage"].update(canonical_text="allowed"),
+            "active abstract storage policy",
         )
 
     def test_schema_required_field_is_enforced(self):

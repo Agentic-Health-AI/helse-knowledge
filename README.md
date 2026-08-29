@@ -9,7 +9,7 @@ produces versioned syntheses and source-bound claims.
 The first pilot is **serum/plasma 25-hydroxyvitamin D (25(OH)D)**.
 
 - [Research Corpus Contract 0.1](docs/research-corpus-contract.md)
-- [Latest established review method 0.1](docs/latest-established-review-method.md)
+- [Latest established review method 0.2](docs/latest-established-review-method-0.2.md)
 - [25(OH)D pilot](measurements/vitamin-d-25-oh/index.md)
 - [Helse Evidence Profile extension](profile/helse-evidence-profile.yaml)
 - [Pinned OKF 0.2](profile/okf-0.2-pin.yaml)

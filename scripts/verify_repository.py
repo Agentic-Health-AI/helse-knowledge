@@ -17,7 +17,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 ISLAND_REL = Path("measurements/vitamin-d-25-oh")
 MANIFEST_REL = ISLAND_REL / "corpus-manifest.yaml"
-AMENDMENT_REL = ISLAND_REL / "amendments/0.1.2-latest-serum-reviews.yaml"
+AMENDMENT_REL = ISLAND_REL / "amendments/0.1.3-rights-safe-abstracts.yaml"
+SELECTION_AMENDMENT_REL = ISLAND_REL / "amendments/0.1.2-latest-serum-reviews.yaml"
 EXPECTED_PIN = {
     "upstream_version": "0.2",
     "repository": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
@@ -123,6 +124,7 @@ def load_bundle(root: Path = ROOT) -> dict[str, Any]:
         "manifest": manifest,
         "protocol": read_yaml(resolve_inside(root, island, manifest["protocol"]))["protocol"],
         "amendment": read_yaml(root / AMENDMENT_REL),
+        "selection_amendment": read_yaml(root / SELECTION_AMENDMENT_REL),
         "profile": read_yaml(resolve_inside(root, island, manifest["profile"])),
         "pin": read_yaml(resolve_inside(root, island, manifest["okf_pin"])),
         "schemas": {},
@@ -225,33 +227,53 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
         fail("protocol freeze gate")
 
     amendment = amendment_document.get("amendment", {})
-    amendment_scope = amendment_document.get("scope", {})
-    amendment_method = amendment_document.get("method", {})
-    amendment_pubmed = amendment_document.get("pubmed", {})
+    selection_document = bundle["selection_amendment"]
     base_protocol_hash = hashlib.sha256((bundle["island"] / "protocol.yaml").read_bytes()).hexdigest()
     if amendment.get("status") != "frozen" or amendment.get("base_protocol_id") != protocol.get("id"):
         fail("active protocol amendment identity")
     if amendment.get("input_hashes", {}).get("protocol.yaml") != base_protocol_hash:
         fail("active protocol amendment base hash")
-    previous_amendment = bundle["island"] / "amendments/0.1.1-meta-analysis-pilot.yaml"
-    method_path = bundle["root"] / "docs/latest-established-review-method.md"
-    if amendment.get("input_hashes", {}).get(previous_amendment.name) != hashlib.sha256(previous_amendment.read_bytes()).hexdigest():
+    selection_path = bundle["root"] / SELECTION_AMENDMENT_REL
+    method_path = bundle["root"] / "docs/latest-established-review-method-0.2.md"
+    if amendment.get("input_hashes", {}).get(selection_path.name) != hashlib.sha256(selection_path.read_bytes()).hexdigest():
         fail("active protocol amendment predecessor hash")
     if amendment.get("input_hashes", {}).get(method_path.name) != hashlib.sha256(method_path.read_bytes()).hexdigest():
         fail("active review method hash")
     required_amendment_fields = set(protocol.get("amendment_policy", {}).get("required_fields", []))
     if not required_amendment_fields <= set(amendment):
         fail("active protocol amendment completeness")
-    if amendment.get("supersedes_amendment") != "https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1":
+    if amendment.get("supersedes_amendment") != "https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.2":
         fail("active protocol amendment predecessor")
-    if amendment_scope.get("sources") != ["pubmed"] or amendment_scope.get("specimens") != ["serum", "plasma"] or amendment_scope.get("publication_window") != {"from": "2021-01-01", "through": "2026-08-29"}:
+    amendment_scope = amendment_document.get("scope", {})
+    abstract_storage = amendment_document.get("abstract_storage", {})
+    if amendment_scope.get("sources") != ["pubmed"] or amendment_scope.get("selection_amendment") != selection_document.get("amendment", {}).get("amendment_id"):
         fail("active protocol amendment scope")
-    abstract_policy = amendment_method.get("abstract", {})
+    if abstract_storage.get("canonical_text") != "forbidden-without-verified-redistribution-license" or abstract_storage.get("runtime_validation") != "refetched-abstract-must-match-sha256" or abstract_storage.get("full_text_fallback") != "forbidden-for-this-run":
+        fail("active abstract storage policy")
+    collection_policy = amendment_document.get("collection", {})
+    if collection_policy.get("preserve_raw_esearch") is not True or collection_policy.get("preserve_raw_efetch_canonically") is not False or collection_policy.get("dated_snapshot_notice") != "required":
+        fail("active abstract collection policy")
+
+    selection = selection_document.get("amendment", {})
+    selection_scope = selection_document.get("scope", {})
+    selection_method = selection_document.get("method", {})
+    selection_pubmed = selection_document.get("pubmed", {})
+    if selection.get("status") != "frozen" or selection.get("base_protocol_id") != protocol.get("id"):
+        fail("selection amendment identity")
+    previous_amendment = bundle["island"] / "amendments/0.1.1-meta-analysis-pilot.yaml"
+    selection_method_path = bundle["root"] / "docs/latest-established-review-method.md"
+    if selection.get("input_hashes", {}).get(previous_amendment.name) != hashlib.sha256(previous_amendment.read_bytes()).hexdigest():
+        fail("selection amendment predecessor hash")
+    if selection.get("input_hashes", {}).get(selection_method_path.name) != hashlib.sha256(selection_method_path.read_bytes()).hexdigest():
+        fail("selection review method hash")
+    if selection_scope.get("sources") != ["pubmed"] or selection_scope.get("specimens") != ["serum", "plasma"] or selection_scope.get("publication_window") != {"from": "2021-01-01", "through": "2026-08-29"}:
+        fail("selection amendment scope")
+    abstract_policy = selection_method.get("abstract", {})
     if abstract_policy.get("required") is not True or abstract_policy.get("canonical_source") is not True or abstract_policy.get("full_text_fallback") != "forbidden-for-this-run":
-        fail("active abstract source policy")
-    narrow_queries = amendment_pubmed.get("query_families", {})
-    if set(narrow_queries) != ACTIVE_AMENDMENT_QUERY_IDS or set(amendment_pubmed.get("expected_query_ids", [])) != ACTIVE_AMENDMENT_QUERY_IDS:
-        fail("active protocol amendment query set")
+        fail("selection abstract source policy")
+    narrow_queries = selection_pubmed.get("query_families", {})
+    if set(narrow_queries) != ACTIVE_AMENDMENT_QUERY_IDS or set(selection_pubmed.get("expected_query_ids", [])) != ACTIVE_AMENDMENT_QUERY_IDS:
+        fail("selection amendment query set")
     for query_id, query in narrow_queries.items():
         if '"Vitamin D"[MeSH Terms]' in query or '"Calcifediol"[MeSH Terms]' in query:
             fail(f"active query has broad analyte branch: {query_id}")

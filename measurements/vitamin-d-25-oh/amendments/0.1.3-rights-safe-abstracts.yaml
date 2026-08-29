@@ -1,0 +1,39 @@
+amendment:
+  amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.3
+  base_protocol_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  version: "0.1.3"
+  status: frozen
+  date: "2026-08-30"
+  reason: Preserve PubMed abstract identity and provenance without republishing abstract text whose redistribution license is not established.
+  validator_version: verify_repository.py/0.1.3
+  supersedes_amendment: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.2
+  input_hashes:
+    protocol.yaml: 1c6bf4bce07de959eb24c2479f81f83289af2ddef087d8e7f009a6a889889a36
+    0.1.2-latest-serum-reviews.yaml: dfe8ba4b92c6909b20436c934fc62f17be43e13ccf67f114ad517e644b71b0f9
+    latest-established-review-method.md: 03956f4a932998b05568ee5d0a03a0dedca7b6d8fdb0c2e6518a3e26ba879a21
+    latest-established-review-method-0.2.md: 291278cd707f19ac3e39d8c4e25d756e77213b1456923c966781680f59ac65e0
+  affected_search_runs: []
+
+scope:
+  sources: [pubmed]
+  selection_amendment: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.2
+  query_families: inherited-unchanged-from-selection-amendment
+  method: docs/latest-established-review-method-0.2.md
+
+abstract_storage:
+  processing_source: official-pubmed-efetch
+  local_cache: ignored-and-disposable
+  canonical_text: forbidden-without-verified-redistribution-license
+  canonical_fields: [pmid, pubmed_url, retrieved_at, abstract_sha256, abstract_character_count, pubmed_revision_date, provenance]
+  runtime_validation: refetched-abstract-must-match-sha256
+  revision_handling: append-only-new-collection-run
+  missing_or_conflicting_fields: unknown-or-unresolved
+  full_text_fallback: forbidden-for-this-run
+
+collection:
+  preserve_raw_esearch: true
+  preserve_raw_efetch_canonically: false
+  preserve_efetch_response_sha256: true
+  acknowledge_nlm_source: true
+  dated_snapshot_notice: required
+  no_synthesis: true

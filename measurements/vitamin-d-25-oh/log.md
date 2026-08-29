@@ -21,6 +21,9 @@
 
 ## 2026-08-30
 
+- Froze amendment 0.1.3 after NLM's terms showed that PubMed abstracts may retain publisher or
+  author copyright. Abstracts remain sufficient processing sources but are cached transiently;
+  canonical records retain their PubMed identity, hash and retrieval provenance without raw text.
 - Froze amendment 0.1.2 and the reusable latest-established-review method. The active search now
   requires a recent, analyte-specific title, explicit blood/serum/plasma context and a PubMed
   abstract. The 0.1.1 corpus remains an over-broad calibration run and is not active evidence.
