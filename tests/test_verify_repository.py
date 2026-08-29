@@ -22,6 +22,28 @@ class RepositoryVerifierTests(unittest.TestCase):
     def test_valid_fixture_passes(self):
         self.assertEqual([], verifier.validate())
 
+    def test_active_query_cannot_restore_broad_vitamin_d_branch(self):
+        def mutate(bundle):
+            query = bundle["amendment"]["pubmed"]["query_families"]["q1-measurement"]
+            bundle["amendment"]["pubmed"]["query_families"]["q1-measurement"] = query.replace(
+                '"Calcifediol"[MeSH Terms]',
+                '"Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms]',
+                1,
+            )
+
+        self.rejects(mutate, "active query has broad analyte branch: q1-measurement")
+
+    def test_active_query_requires_meta_analysis_gate(self):
+        self.rejects(
+            lambda b: b["amendment"]["pubmed"]["query_families"].update(
+                {"q2-distribution": b["amendment"]["pubmed"]["query_families"]["q2-distribution"].replace(
+                    '("Meta-Analysis"[Publication Type] OR meta-analy*[Title])',
+                    'review*[Title/Abstract]',
+                )}
+            ),
+            "active query lacks meta-analysis gate: q2-distribution",
+        )
+
     def test_schema_required_field_is_enforced(self):
         self.rejects(
             lambda b: b["collections"]["claims"][0].pop("claim_type"),

@@ -7,6 +7,7 @@ deficiency, sufficiency, optimal levels, supplementation or treatment.
 
 - [Measurement identity](measurement.md)
 - [Protocol](protocol.md) and [canonical YAML](protocol.yaml)
+- [Active 0.1.1 meta-analysis amendment](amendments/0.1.1-meta-analysis-pilot.yaml)
 - [Corpus](corpus/README.md)
 - [Search runs](searches/README.md)
 - [Evidence extractions](evidence/README.md)

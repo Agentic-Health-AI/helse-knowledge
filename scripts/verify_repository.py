@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -16,6 +17,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 ISLAND_REL = Path("measurements/vitamin-d-25-oh")
 MANIFEST_REL = ISLAND_REL / "corpus-manifest.yaml"
+AMENDMENT_REL = ISLAND_REL / "amendments/0.1.1-meta-analysis-pilot.yaml"
 EXPECTED_PIN = {
     "upstream_version": "0.2",
     "repository": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
@@ -115,6 +117,7 @@ def load_bundle(root: Path = ROOT) -> dict[str, Any]:
         "island": island,
         "manifest": manifest,
         "protocol": read_yaml(resolve_inside(root, island, manifest["protocol"]))["protocol"],
+        "amendment": read_yaml(root / AMENDMENT_REL),
         "profile": read_yaml(resolve_inside(root, island, manifest["profile"])),
         "pin": read_yaml(resolve_inside(root, island, manifest["okf_pin"])),
         "schemas": {},
@@ -174,6 +177,7 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
 
     manifest = bundle["manifest"]
     protocol = bundle["protocol"]
+    amendment_document = bundle["amendment"]
     profile = bundle["profile"]
     pin = bundle["pin"].get("pin", {})
     collections = bundle["collections"]
@@ -211,6 +215,34 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
         fail("protocol completeness")
     if protocol.get("status") != "frozen" or protocol.get("collection_allowed") is not True:
         fail("protocol freeze gate")
+
+    amendment = amendment_document.get("amendment", {})
+    amendment_scope = amendment_document.get("scope", {})
+    amendment_pubmed = amendment_document.get("pubmed", {})
+    base_protocol_hash = hashlib.sha256((bundle["island"] / "protocol.yaml").read_bytes()).hexdigest()
+    if amendment.get("status") != "frozen" or amendment.get("base_protocol_id") != protocol.get("id"):
+        fail("active protocol amendment identity")
+    if amendment.get("input_hashes", {}).get("protocol.yaml") != base_protocol_hash:
+        fail("active protocol amendment base hash")
+    required_amendment_fields = set(protocol.get("amendment_policy", {}).get("required_fields", []))
+    if not required_amendment_fields <= set(amendment):
+        fail("active protocol amendment completeness")
+    if amendment_scope.get("sources") != ["pubmed"] or amendment_scope.get("q6_disagreement") != "derived-from-included-q1-q5-records":
+        fail("active protocol amendment scope")
+    narrow_query_ids = EXPECTED_QUERY_IDS - {"q6-disagreement-context"}
+    narrow_queries = amendment_pubmed.get("query_families", {})
+    if set(narrow_queries) != narrow_query_ids or set(amendment_pubmed.get("expected_query_ids", [])) != narrow_query_ids:
+        fail("active protocol amendment query set")
+    required_analyte_terms = ('"Calcifediol"[MeSH Terms]', '"25-hydroxyvitamin D"[Title/Abstract]', '"25(OH)D"[Title/Abstract]')
+    for query_id, query in narrow_queries.items():
+        if '"Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms]' in query:
+            fail(f"active query has broad analyte branch: {query_id}")
+        if not all(term in query for term in required_analyte_terms):
+            fail(f"active query lacks 25(OH)D core: {query_id}")
+        if '("Meta-Analysis"[Publication Type] OR meta-analy*[Title])' not in query:
+            fail(f"active query lacks meta-analysis gate: {query_id}")
+        if "2026/08/29[Date - Publication]" not in query:
+            fail(f"active query lacks frozen cutoff: {query_id}")
     llm_policy = protocol.get("llm_processing", {})
     if llm_policy.get("human_fallback") != "forbidden" or not llm_policy.get("required_run_provenance"):
         fail("LLM processing policy incomplete")

@@ -1,0 +1,38 @@
+amendment:
+  amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1
+  base_protocol_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  version: "0.1.1"
+  status: frozen
+  date: "2026-08-29"
+  reason: Narrow the pilot to 25(OH)D-specific meta-analyses after count-only preflights showed that the primary-study queries were too broad for a scalable pilot.
+  validator_version: "45c48bc"
+  input_hashes:
+    protocol.yaml: 1c6bf4bce07de959eb24c2479f81f83289af2ddef087d8e7f009a6a889889a36
+  affected_search_runs: []
+
+scope:
+  evidence_unit: meta-analysis
+  eligible_publication_signals:
+    - Meta-Analysis publication type
+    - meta-analy* in title
+  sources: [pubmed]
+  medrxiv: deferred-because-date-only-crawl-is-disproportionate-for-this-pilot
+  q6_disagreement: derived-from-included-q1-q5-records
+  primary_studies: not-collected-in-this-pilot
+  unchanged_screening_requirements: [adult-population, serum-or-plasma-25-oh-d, eligible-question, eligible-outcome, eligible-underlying-design]
+
+pubmed:
+  expected_query_ids: [q1-measurement, q2-distribution, q3-association, q4-intervention, q5-high-measured-level, q5-supplementation-harm]
+  query_families:
+    q1-measurement: >-
+      (("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (assay*[Title/Abstract] OR measur*[Title/Abstract] OR standard*[Title/Abstract] OR calibrat*[Title/Abstract] OR immunoassay*[Title/Abstract] OR "liquid chromatography"[Title/Abstract] OR "mass spectrometry"[Title/Abstract] OR "LC-MS/MS"[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
+    q2-distribution: >-
+      (("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (distribution*[Title/Abstract] OR prevalence[Title/Abstract] OR season*[Title/Abstract] OR population-based[Title/Abstract] OR survey*[Title/Abstract] OR cohort*[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
+    q3-association: >-
+      (("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND ("Fractures, Bone"[MeSH Terms] OR "Accidental Falls"[MeSH Terms] OR "Mortality"[MeSH Terms] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND ("Cohort Studies"[MeSH Terms] OR prospective[Title/Abstract] OR cohort[Title/Abstract] OR "nested case-control"[Title/Abstract] OR "case-cohort"[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
+    q4-intervention: >-
+      ((("Vitamin D"[MeSH Terms] OR cholecalciferol[Title/Abstract] OR ergocalciferol[Title/Abstract]) AND (supplement*[Title/Abstract] OR dose*[Title/Abstract])) AND ("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND ("Randomized Controlled Trial"[Publication Type] OR random*[Title/Abstract] OR placebo[Title/Abstract]) AND (fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
+    q5-high-measured-level: >-
+      (("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (high[Title/Abstract] OR excess*[Title/Abstract] OR toxic*[Title/Abstract]) AND (hypercalcemia[Title/Abstract] OR nephrolithiasis[Title/Abstract] OR "kidney stone"[Title/Abstract] OR renal[Title/Abstract] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
+    q5-supplementation-harm: >-
+      ((("Vitamin D"[MeSH Terms] OR cholecalciferol[Title/Abstract] OR ergocalciferol[Title/Abstract]) AND (supplement*[Title/Abstract] OR dose*[Title/Abstract])) AND ("Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (adverse[Title/Abstract] OR harm*[Title/Abstract] OR safety[Title/Abstract] OR hypercalcemia[Title/Abstract] OR nephrolithiasis[Title/Abstract] OR "kidney stone"[Title/Abstract] OR renal[Title/Abstract] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND ("Meta-Analysis"[Publication Type] OR meta-analy*[Title]) AND 1900/01/01:2026/08/29[Date - Publication])
