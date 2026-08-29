@@ -1,0 +1,24 @@
+profile:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/profile/0.1
+  name: Helse Evidence Profile
+  version: "0.1-draft"
+  status: draft
+  namespace: helse_evidence
+
+upstream_okf:
+  version: "0.2"
+  repository: https://github.com/GoogleCloudPlatform/knowledge-catalog
+  specification_path: okf/SPEC.md
+  resolved_commit: 02317b819c9602fca7cbaa565c215144cef98fe8
+  sha256: 26aa5da029278939f914e578107242d9607d4f2dc5fe153272b82f9ed1030101
+
+canonical_formats:
+  concepts: markdown
+  corpora: jsonl
+  profile_and_schemas: yaml
+  generated_artifacts_are_canonical: false
+
+verification:
+  human_events_require_actual_human_review: true
+  stable_claim_from_preprints_only: forbidden
+  personal_health_data: forbidden
