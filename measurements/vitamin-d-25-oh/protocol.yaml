@@ -1,16 +1,17 @@
 protocol:
   id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
   version: "0.1.0"
-  status: proposed-for-freeze
-  protocol_owner: pending-human-assignment
+  status: frozen
+  protocol_owner: automated-contract
   proposed_at: "2026-08-29"
+  frozen_at: "2026-08-29"
   search_cutoff: "2026-08-29"
-  collection_allowed: false
-  freeze_requirement: A real human protocol owner must approve every blocking decision and add a human approval event before status can become frozen.
+  collection_allowed: true
+  freeze_requirement: This version is immutable in Git; the repository verifier and tests must pass.
   immutable_collection_baseline: A frozen protocol version and its append-only amendments; freezing does not imply profile stability.
   amendment_policy:
     mode: append-only
-    required_fields: [amendment_id, date, reason, approved_by_human, affected_search_runs]
+    required_fields: [amendment_id, date, reason, validator_version, input_hashes, affected_search_runs]
     amendments: []
 
   analyte:
@@ -82,7 +83,7 @@ protocol:
 
   eligibility:
     languages: no-restriction
-    translation: Machine translation may assist screening; inclusion and extraction require human-verifiable source text.
+    translation: LLM translation may assist parsing; material fields still require immutable source spans in the original text and an audit outcome.
     date_range: {from: database-inception, through: "2026-08-29"}
     full_text: Obtain lawfully. If unavailable, use awaiting-full-text; never infer missing content or republish restricted full text.
     include: [human-research, declared-eligible-population, serum-or-plasma-25-oh-d, eligible-design, pilot-question-and-outcome]
@@ -123,8 +124,8 @@ protocol:
       note: The official API is date-based, not topical. Apply the frozen local filter and retain the unfiltered page log for audit.
 
   screening:
-    procedure: Two independent human screening decisions after protocol freeze; disagreements go once to a designated human adjudicator.
-    machine_role: A machine may propose a decision but cannot satisfy an independent human decision or adjudication.
+    procedure: A parser LLM extracts eligibility facts with source spans; an auditor LLM checks support; a deterministic reducer applies the frozen include/exclude rules.
+    disagreement: Unsupported, conflicting or incomplete eligibility facts produce awaiting-full-text or unresolved; there is no human fallback.
     states: [discovered, screening, included, excluded, awaiting-full-text, duplicate, superseded-by-publication, retracted]
     allowed_transitions:
       - [discovered, screening]
@@ -139,27 +140,34 @@ protocol:
   relations:
     deduplication_order: [exact-pmid, normalized-doi, medrxiv-doi-plus-version, conservative-normalized-title-and-year-candidate]
     doi_normalization: "Lowercase, trim whitespace, and remove an https://doi.org/ or doi: prefix; preserve the source value separately."
-    candidate_matching: Title/year candidates require human review and never auto-merge.
+    candidate_matching: Title/year candidates never auto-merge; unresolved candidates remain separate and are conservatively deduplicated only at synthesis time.
     manifestations: Link preprint and final to one study_id; synthesis may use at most one active manifestation per study.
-    preprint_final_matching: Prefer medRxiv published DOI, then exact normalized DOI/PMID relations; fuzzy title/author/year matches are candidates requiring human confirmation.
+    preprint_final_matching: Prefer medRxiv published DOI, then exact normalized DOI/PMID relations; fuzzy title/author/year matches remain unresolved candidates unless independently LLM-audited as supported.
     corrections_retractions: Preserve notice and affected record as separate records with correction-of or retraction-of relations and append-only state history.
 
   extraction:
-    required_fields: [study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_statements, reviewer_assessments, interpretations, source_locations, generator, verification_events]
+    required_fields: [study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_statements, audit_assessments, interpretations, source_locations, generator, verification_events]
     rules:
       - Extract only an included active manifestation.
       - Preserve unknown as null; never invent metadata.
-      - Keep source statements, reviewer assessments, and interpretations separate.
+      - Keep source statements, audit assessments, and interpretations separate.
       - Every material field must be source-bound or explicitly null.
-  risk_of_bias_proposals:
-    q1-measurement: adapted analytical-method checklist pending human approval
-    q2-distribution: JBI prevalence checklist pending human approval
-    q3-association: ROBINS-E pending human approval
-    q4-intervention: RoB 2 pending human approval
-    q5-harm: RoB 2 or ROBINS-E by design pending human approval
+  llm_processing:
+    parser: Extract structured facts using only the supplied source and exact source locations.
+    auditor: Independently label each material fact supported, unsupported, conflict or unknown.
+    reducer: Accept only supported facts; all other outcomes become unresolved.
+    required_run_provenance: [model_id, model_revision, prompt_id, input_sha256, output_sha256, source_locations]
+    confidence_is_not_acceptance: true
+    human_fallback: forbidden
+  risk_of_bias_rules:
+    q1-measurement: versioned analytical-method signaling rules
+    q2-distribution: versioned JBI prevalence signaling rules
+    q3-association: versioned ROBINS-E signaling rules
+    q4-intervention: versioned RoB 2 signaling rules
+    q5-harm: versioned RoB 2 or ROBINS-E signaling rules selected by study design
     q6-disagreement: instrument inherited from each underlying question
   synthesis:
     method: structured-narrative-only
-    meta_analysis: Not permitted until a human-approved amendment defines comparability, effect measures, model, heterogeneity, and sensitivity analyses.
+    meta_analysis: Not permitted in 0.1. A later versioned amendment must define machine-checkable comparability, effect measures, model, heterogeneity and sensitivity rules.
     inputs: Only included active manifestations with source-bound extractions.
     preprints: May be shown as emerging evidence but cannot alone support a stable conclusion.

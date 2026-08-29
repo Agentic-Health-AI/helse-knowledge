@@ -1,6 +1,6 @@
 # Research Corpus Contract 0.1
 
-Status: **0.1 pilot implementation — proposed for freeze**
+Status: **0.1 frozen pilot implementation**
 Pilot: **serum/plasma 25-hydroxyvitamin D (25(OH)D)**  
 Updated: **2026-08-29**
 
@@ -26,8 +26,8 @@ published claims
 Discovery is not evidence. Extraction is not synthesis. A published claim must be traceable through
 all preceding stages.
 
-This implementation is a synthetic, mechanically verified fixture; it is not human-approved and it
-does not authorize collection. The **immutable collection baseline** is a specific frozen protocol
+This implementation is a synthetic, mechanically verified fixture. The **immutable collection
+baseline** is a specific frozen protocol
 version plus its append-only amendments. It governs a collection run. **Profile stability** is a
 later portability judgement: profile 0.1 becomes stable only after this pilot and a small ALAT pilot
 fit without schema changes. Freezing a collection baseline does not imply profile stability.
@@ -54,9 +54,9 @@ references that pin. An upstream change requires an explicit profile migration.
 
 ## Stage A — protocol
 
-The protocol is versioned before collection. A protocol marked `proposed-for-freeze` is a
-specification only; it may become `frozen` only after a real human approval event. A frozen version
-is immutable: later changes are append-only amendments with a reason and a new version. It records:
+The protocol is versioned before collection. It becomes `frozen` when its Git version is recorded
+and the repository verifier and tests pass. A frozen version is immutable: later changes are
+append-only, mechanically validated amendments with a reason and a new version. It records:
 
 - normalized analyte, specimens and synonyms;
 - separate research questions;
@@ -122,8 +122,9 @@ Each included study receives a source-bound extraction appropriate to its questi
 - exact source locations;
 - generator and verification events.
 
-A machine may propose an extraction. Only an actual human review may add a `human:` verification
-event. Source statements, reviewer assessments and interpretations remain separate.
+An LLM parser proposes an extraction with source spans. An independent LLM audit labels every
+material field `supported`, `unsupported`, `conflict` or `unknown`; a deterministic reducer admits
+only supported fields. Source statements, audit assessments and interpretations remain separate.
 
 ## Stage E — synthesis
 
@@ -175,18 +176,16 @@ PubMed is the primary discovery backbone. medRxiv is a separately labelled front
 Citation chaining may supplement a documented search but cannot replace it. Authorities and
 guidelines are practice context, not automatically superior evidence.
 
-## Roles
+## Processing roles
 
-- Protocol owner approves questions, criteria and amendments.
-- Collector runs searches and imports metadata without making conclusions.
-- Screener applies inclusion rules and records reasons.
-- Extractor produces source-bound structured observations.
-- Synthesizer evaluates included evidence and proposes conclusions.
-- Reviewer verifies interpretation and approves stable claims.
-- Automation validates structure, provenance, links, states and reproducibility.
+- Collector automation runs frozen searches and imports metadata without making conclusions.
+- Parser LLMs produce source-bound candidate facts under a frozen prompt.
+- Auditor LLMs assess evidence support under a separate frozen prompt.
+- Deterministic reducers apply eligibility, relation, risk-of-bias, synthesis and claim rules.
+- Repository verification validates structure, provenance, hashes, links, states and reproducibility.
 
-One person may hold several roles, but actions retain their role and provenance. Material uncertainty
-is recorded or escalated once; there are no adversarial-review loops.
+There are no human approval roles or fallback gates. Material uncertainty is recorded as `unknown`,
+`conflict` or `unresolved`; it cannot be promoted by confidence alone.
 
 ## Mechanical gates
 
@@ -201,14 +200,16 @@ Verification must fail when:
 - a retracted source supports an active claim;
 - a preprint is represented as peer-reviewed;
 - a stable conclusion is supported only by preprints;
-- a machine proposal claims human verification;
+- an LLM-derived material field lacks a source span or supported independent audit;
+- a purported LLM run lacks exact model, prompt, input or output provenance;
 - generated artifacts are required to rebuild canonical knowledge;
 - personal or private health data or structured credentials are detected.
 
 The manifest- and schema-driven local verifier also rejects duplicate IDs, undeclared JSONL,
 missing source/query traces, invalid state transitions, broken relations and events, extraction
 from non-included records, preprint/final double-counting, and canonical references to generated
-artifacts. It validates contract mechanics, not medical correctness or human approval.
+artifacts. It validates the evidence-processing contract and its recorded support, not LLM
+infallibility.
 
 ## Pilot sequence
 

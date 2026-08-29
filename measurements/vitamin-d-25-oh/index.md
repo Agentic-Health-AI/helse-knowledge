@@ -1,6 +1,6 @@
 # 25-hydroxyvitamin D
 
-Status: **proposed-for-freeze protocol; synthetic implementation fixtures; collection blocked**
+Status: **Git-frozen protocol; synthetic implementation fixtures; no research collected yet**
 
 This island covers serum/plasma 25-hydroxyvitamin D, 25(OH)D. It does not yet make claims about
 deficiency, sufficiency, optimal levels, supplementation or treatment.

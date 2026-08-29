@@ -5,7 +5,7 @@ required: [id, record_type, relation_type, from_id, to_id, match_basis, status, 
 types: {id: string, record_type: string, relation_type: string, from_id: string, to_id: string, match_basis: string, status: string, auto_merged: boolean}
 enums:
   relation_type: [duplicate-of, duplicate-candidate, preprint-version-of, final-publication-of, correction-of, retraction-of]
-  status: [fixture-only, proposed, human-confirmed]
+  status: [fixture-only, exact-match, llm-audited, unresolved]
 deduplication_order: [exact-pmid, normalized-doi, medrxiv-doi-plus-version, conservative-normalized-title-year-candidate]
 candidate_auto_merge: forbidden
 preprint_final_double_counting: forbidden

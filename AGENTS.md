@@ -17,10 +17,12 @@ It does not own the Helse dashboard or any user's data.
 - Keep discovery, screening, extraction, synthesis and claims as separate artifacts.
 - Discovery is not evidence. Only included, source-bound extractions feed synthesis.
 - Preserve provenance and unknown values; never invent metadata.
-- A machine may propose content but cannot record human verification.
+- LLMs parse and audit source-bound content under frozen prompts and schemas; deterministic reducers
+  decide which audited fields may advance.
 - Mark preprints clearly; they cannot alone support a stable conclusion.
 - Record disagreements and uncertainty instead of forcing false consensus.
-- No adversarial-review loops. Escalate material uncertainty once to the responsible human.
+- There are no human approval gates. Unsupported, conflicting or incomplete evidence resolves to
+  `unknown` or `unresolved`, never to an invented answer.
 
 ## Architecture
 

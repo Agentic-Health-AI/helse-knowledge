@@ -1,13 +1,12 @@
 ---
 type: Research Protocol
-status: proposed-for-freeze
+status: frozen
 ---
 
 # 25(OH)D research protocol
 
-Version 0.1.0 is a canonical specification, not an executed search. `collection_allowed: false` in
-the companion YAML is authoritative. It may change to `frozen` only after a real human approval
-event; no such event is recorded here.
+Version 0.1.0 is a frozen canonical specification, not an executed search. Git versions the exact
+protocol and schemas; collection is permitted only while the repository verifier and tests pass.
 
 It covers adults in defined population strata and settings, separately tagged special populations,
 and six question families: measurement, distribution, associations, interventions, harms, and
@@ -20,6 +19,6 @@ PubMed query families with a 2026-08-29 cutoff and a date-complete medRxiv API c
 local analyte regex. Exact execution, pagination, eligibility, screening, relation, extraction,
 risk-of-bias and structured narrative-synthesis rules are in [protocol.yaml](protocol.yaml).
 
-The four choices that still require actual human approval are isolated in the
-[decision register](../../docs/human-decision-register.md). No collection may start before all four
-are approved and the protocol status is changed through a real human approval event.
+Semantic processing uses a source-bound LLM parser, an independent LLM audit and deterministic
+reduction. Unsupported or conflicting evidence remains unresolved; there is no human approval or
+fallback gate.

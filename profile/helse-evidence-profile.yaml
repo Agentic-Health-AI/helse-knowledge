@@ -1,8 +1,8 @@
 profile:
   id: https://github.com/Agentic-Health-AI/helse-knowledge/profile/0.1
   name: Helse Evidence Profile
-  version: "0.1-proposed"
-  status: proposed-for-freeze
+  version: "0.1-frozen-pilot"
+  status: frozen-for-pilot
   namespace: helse_evidence
 
 extends:
@@ -29,7 +29,10 @@ canonical_formats:
   generated_artifacts_are_canonical: false
 
 verification:
-  human_events_require_actual_human_review: true
+  semantic_engine: source-bound-llm
+  human_approval_gates: forbidden
+  material_fields_require_source_spans: true
+  parser_output_requires_independent_audit: true
+  unsupported_or_conflicting_result: unresolved
   stable_claim_from_preprints_only: forbidden
   personal_health_data: forbidden
-  machine_may_only_propose: true

@@ -200,18 +200,20 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
         fail("pin/profile separation")
     if "upstream_okf" in profile:
         fail("profile duplicates upstream OKF pin")
+    verification_policy = profile.get("verification", {})
+    if verification_policy.get("human_approval_gates") != "forbidden":
+        fail("human approval gate is not forbidden")
     if profile.get("canonical_formats", {}).get("generated_artifacts_are_canonical") is not False:
         fail("canonical dependence on generated artifacts")
 
-    required_protocol = {"id", "version", "status", "protocol_owner", "proposed_at", "search_cutoff", "collection_allowed", "analyte", "scope", "questions", "eligibility", "discovery", "screening", "relations", "extraction", "risk_of_bias_proposals", "synthesis", "amendment_policy"}
+    required_protocol = {"id", "version", "status", "protocol_owner", "proposed_at", "frozen_at", "search_cutoff", "collection_allowed", "analyte", "scope", "questions", "eligibility", "discovery", "screening", "relations", "extraction", "llm_processing", "risk_of_bias_rules", "synthesis", "amendment_policy"}
     if not required_protocol <= set(protocol):
         fail("protocol completeness")
-    if protocol.get("status") == "proposed-for-freeze" and protocol.get("collection_allowed") is not False:
+    if protocol.get("status") != "frozen" or protocol.get("collection_allowed") is not True:
         fail("protocol freeze gate")
-    if protocol.get("status") == "frozen" and not protocol.get("freeze_approval_event_ids"):
-        fail("frozen protocol lacks human approval event")
-    if protocol.get("discovery", {}).get("run_status") != "never-run" and protocol.get("collection_allowed") is False:
-        fail("search status conflicts with collection gate")
+    llm_policy = protocol.get("llm_processing", {})
+    if llm_policy.get("human_fallback") != "forbidden" or not llm_policy.get("required_run_provenance"):
+        fail("LLM processing policy incomplete")
     questions = {item.get("id"): item for item in protocol.get("questions", []) if isinstance(item, dict)}
     if set(questions) != EXPECTED_QUESTION_IDS:
         fail("protocol question set")
@@ -312,20 +314,20 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
             fail("exclusion without controlled reason")
         if decision != "excluded" and decision != "duplicate" and reason is not None:
             fail("unexpected exclusion reason")
-        if not screening.get("reviewer_events"):
+        if not screening.get("evaluation_events"):
             fail("screening lacks review event")
-        for event_id in screening.get("reviewer_events", []):
+        for event_id in screening.get("evaluation_events", []):
             event = events.get(event_id)
             if event is None or event.get("target_id") != screening.get("id"):
                 fail("broken screening event reference")
 
+    allowed_actor_types = {"llm", "validator"}
+    required_llm_provenance = set(protocol.get("llm_processing", {}).get("required_run_provenance", []))
     for event in events.values():
-        if event.get("actor_type") == "machine" and event.get("action") != "propose":
-            fail("machine-authored human verification")
-        if event.get("actor_type") == "human":
-            provenance = event.get("provenance", {})
-            if provenance.get("actual_human_review") is not True or not provenance.get("reviewer_id"):
-                fail("unsubstantiated human verification event")
+        if event.get("actor_type") not in allowed_actor_types:
+            fail("forbidden verification actor type")
+        if event.get("actor_type") == "llm" and not required_llm_provenance <= set(event.get("provenance", {})):
+            fail("LLM event missing reproducibility provenance")
         if event.get("target_id") not in all_ids:
             fail("verification event target missing")
 
@@ -409,8 +411,6 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
                     fail("canonical dependence on generated artifacts")
 
     if manifest.get("mode") == "synthetic-fixture":
-        if any(event.get("actor_type") == "human" for event in events.values()):
-            fail("synthetic fixture may not record human verification")
         for collection_name, items in collections.items():
             for item in items:
                 if not str(item.get("id", "")).startswith("https://example.invalid/"):

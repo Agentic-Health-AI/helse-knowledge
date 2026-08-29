@@ -4,6 +4,5 @@ record_type: verification-event
 required: [id, record_type, actor_type, action, target_id, outcome, timestamp, provenance]
 types: {id: string, record_type: string, actor_type: string, action: string, target_id: string, outcome: string, timestamp: string, provenance: object}
 enums:
-  actor_type: [machine, human]
-machine_actions: [propose]
-human_verification_requires_actor_type: human
+  actor_type: [llm, validator]
+  action: [parse, audit, reduce, validate]

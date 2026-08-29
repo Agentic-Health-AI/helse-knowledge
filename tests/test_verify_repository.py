@@ -78,7 +78,7 @@ class RepositoryVerifierTests(unittest.TestCase):
 
     def test_broken_screening_event_is_rejected(self):
         self.rejects(
-            lambda b: b["collections"]["screenings"][0].update(reviewer_events=["https://example.invalid/missing"]),
+            lambda b: b["collections"]["screenings"][0].update(evaluation_events=["https://example.invalid/missing"]),
             "broken screening event reference",
         )
 
@@ -187,20 +187,20 @@ class RepositoryVerifierTests(unittest.TestCase):
             "preprint labelled peer-reviewed",
         )
 
-    def test_machine_cannot_claim_human_verification(self):
+    def test_human_verification_actor_is_forbidden(self):
         self.rejects(
             lambda b: b["collections"]["verification_events"][0].update(
-                action="human-verified"
+                actor_type="human"
             ),
-            "machine-authored human verification",
+            "forbidden verification actor type",
         )
 
-    def test_unsubstantiated_human_event_is_rejected(self):
+    def test_llm_event_requires_reproducibility_provenance(self):
         self.rejects(
             lambda b: b["collections"]["verification_events"][0].update(
-                actor_type="human", action="verified"
+                actor_type="llm", action="audit", provenance={}
             ),
-            "unsubstantiated human verification event",
+            "LLM event missing reproducibility provenance",
         )
 
     def test_nested_private_value_is_scanned(self):

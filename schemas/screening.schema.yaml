@@ -1,10 +1,10 @@
 schema: helse-evidence/screening
 version: "0.1"
 record_type: screening
-required: [id, record_type, record_id, decision, decision_status, exclusion_reason, reviewer_events, state_history]
-types: {id: string, record_type: string, record_id: string, decision: string, decision_status: string, reviewer_events: array, state_history: array}
+required: [id, record_type, record_id, decision, decision_status, exclusion_reason, evaluation_events, state_history]
+types: {id: string, record_type: string, record_id: string, decision: string, decision_status: string, evaluation_events: array, state_history: array}
 enums:
   decision: [included, excluded, duplicate, awaiting-full-text]
-  decision_status: [fixture-only, proposed, human-verified]
+  decision_status: [fixture-only, llm-audited, unresolved]
 exclusion_reason_required_when: excluded
 unknown_values: null-or-absent

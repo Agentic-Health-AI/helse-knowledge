@@ -1,10 +1,10 @@
 schema: helse-evidence/extraction
 version: "0.1"
 record_type: extraction
-required: [id, record_type, record_id, question_id, extraction_status, study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_statements, reviewer_assessments, interpretations, source_locations, generator, verification_events]
-types: {id: string, record_type: string, record_id: string, question_id: string, extraction_status: string, source_statements: array, reviewer_assessments: array, interpretations: array, source_locations: array, generator: object, verification_events: array}
+required: [id, record_type, record_id, question_id, extraction_status, study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_statements, audit_assessments, interpretations, source_locations, generator, verification_events]
+types: {id: string, record_type: string, record_id: string, question_id: string, extraction_status: string, source_statements: array, audit_assessments: array, interpretations: array, source_locations: array, generator: object, verification_events: array}
 enums:
-  extraction_status: [fixture-only, proposed, human-verified]
+  extraction_status: [fixture-only, llm-audited, unresolved]
 stage_d_fields: [study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_locations, generator, verification_events]
-separation: [source_statements, reviewer_assessments, interpretations]
+separation: [source_statements, audit_assessments, interpretations]
 unknown_values: null-or-absent

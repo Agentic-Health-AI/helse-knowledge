@@ -6,3 +6,5 @@
 - Collection is blocked until the protocol is frozen.
 - Added 0.1 proposed-for-freeze protocol, schemas, synthetic aggregate-only fixtures and local
   mechanical verification. No human approval, collection, medical synthesis or medical claim occurred.
+- Replaced human approval gates with a Git-versioned LLM parse–audit–reduce contract. Ambiguous or
+  unsupported evidence now remains unresolved; no research was collected by this change.
