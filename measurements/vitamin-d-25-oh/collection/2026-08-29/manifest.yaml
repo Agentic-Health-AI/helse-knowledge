@@ -1,0 +1,21 @@
+collection:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1/collections/2026-08-29
+  mode: discovery-only
+  source: pubmed
+  base_protocol_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  base_protocol_sha256: 1c6bf4bce07de959eb24c2479f81f83289af2ddef087d8e7f009a6a889889a36
+  amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1
+  amendment_sha256: 5aa1380cacf7d7d3f7d63cb0e52faeb1cc5f64028186e2ac1197626fcee146bc
+  search_cutoff: '2026-08-29'
+  generated_at: '2026-08-29T20:47:33Z'
+  query_result_records: 910
+  unique_pmids: 546
+  records:
+    searches:
+      path: search-runs.jsonl
+      sha256: cd0214626a50ca20873582d47ce3bb677fbe76591506019b77e0b0ce22e9c169
+      count: 6
+    discoveries:
+      path: discoveries.jsonl
+      sha256: b0fbf6a9e59c80ab3373c5275ac4cc2de27f1514cf5c317380411472d056085c
+      count: 910

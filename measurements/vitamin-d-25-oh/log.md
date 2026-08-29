@@ -11,3 +11,6 @@
   before the amendment.
 - Replaced human approval gates with a Git-versioned LLM parse–audit–reduce contract. Ambiguous or
   unsupported evidence now remains unresolved; no research was collected by this change.
+- Executed all six 0.1.1 PubMed queries and collected 910 query-result records representing 546
+  unique PMIDs. The collection contains public bibliographic metadata only and remains unscreened.
+  No synthesis or claim was produced.

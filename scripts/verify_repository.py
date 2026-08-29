@@ -187,7 +187,7 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
     if set(collections) != required_collections:
         fail("manifest must declare every canonical record collection exactly once")
     listed_jsonl = {path.resolve() for path in bundle["record_paths"].values()}
-    actual_jsonl = set(bundle["island"].rglob("*.jsonl"))
+    actual_jsonl = {path for path in bundle["island"].rglob("*.jsonl") if "collection" not in path.parts}
     if listed_jsonl != actual_jsonl:
         fail("unlisted canonical JSONL file")
     if manifest.get("generated_artifacts_required") is not False:

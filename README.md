@@ -12,9 +12,10 @@ The first pilot is **serum/plasma 25-hydroxyvitamin D (25(OH)D)**.
 - [25(OH)D pilot](measurements/vitamin-d-25-oh/index.md)
 - [Helse Evidence Profile extension](profile/helse-evidence-profile.yaml)
 - [Pinned OKF 0.2](profile/okf-0.2-pin.yaml)
-- [25(OH)D corpus manifest](measurements/vitamin-d-25-oh/corpus-manifest.yaml)
+- [25(OH)D discovery collection](measurements/vitamin-d-25-oh/collection/2026-08-29/README.md)
 - [Licensing](LICENSE.md)
 
-Status: 0.1 implementation fixtures only. The protocol is mechanically frozen for automated
-collection, but all searches remain `never-run` and no medical claim is published.
-Run `python3 scripts/verify_repository.py --root .` to verify the canonical bundle.
+Status: protocol 0.1.1 has collected a PubMed meta-analysis discovery corpus. The 546 unique PubMed
+records are unscreened discovery, not evidence, and no medical claim is published. Run
+`python3 scripts/verify_repository.py --root .` and
+`python3 scripts/verify_discovery_collection.py` to verify the contracts and collection.

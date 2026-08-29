@@ -1,5 +1,5 @@
 # Search runs
 
 Each run records exact query, source, execution time, result count, protocol version and provenance.
-The committed JSONL contains only `never-run` synthetic records used to verify the schema. No
-PubMed or medRxiv request has been made.
+The fixture JSONL remains a schema proof. The executed 0.1.1 PubMed runs are stored separately in
+the [2026-08-29 discovery collection](../collection/2026-08-29/README.md). medRxiv was not executed.
