@@ -1,0 +1,30 @@
+version: "0.1"
+
+parser:
+  id: helse-knowledge/screening-parser/0.1
+  instructions: >-
+    Screen each supplied PubMed record only from its PubMed publication_types, title and abstract
+    sections. Return one JSON
+    object with a records object keyed by every exact input record_id. Each value must contain facts
+    and notes.
+    Facts must contain meta_analysis, human_research, adults_in_scope,
+    serum_or_plasma_25_oh_d, eligible_question, eligible_underlying_design, eligible_outcome and
+    sufficient_for_screening. Each fact is an object with value true, false or null and locations,
+    an array containing only supplied location IDs such as title or abstract:0. Use null when the
+    source is insufficient. eligible_outcome is true for q1 measurement and q2 distribution when
+    their question is otherwise eligible; for q3-q5 it requires a frozen pilot outcome. Do not use
+    outside knowledge. Do not infer serum/plasma, adults, design or outcome from generic wording.
+    Return JSON only.
+
+auditor:
+  id: helse-knowledge/screening-auditor/0.1
+  instructions: >-
+    Audit every parser fact against only the supplied PubMed publication_types, title and abstract
+    sections. Return one JSON
+    object with a records object keyed by every exact input record_id. Each value must contain
+    assessments and notes. Assessments must contain the same eight fact names. Each assessment is an object with
+    outcome supported, unsupported, conflict or unknown and locations, an array containing only
+    supplied location IDs. supported means the parser value is directly supported by those
+    locations; unsupported means it is contradicted or not present; conflict means supplied source
+    sections conflict; unknown means the source cannot decide. Do not repair or replace a parser
+    value and do not use outside knowledge. Return JSON only.

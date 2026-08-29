@@ -14,3 +14,7 @@
 - Executed all six 0.1.1 PubMed queries and collected 910 query-result records representing 546
   unique PMIDs. The collection contains public bibliographic metadata only and remains unscreened.
   No synthesis or claim was produced.
+- Parsed and independently audited all 546 unique records with source-bound `gpt-5.6-luna` batches,
+  then applied screening-reducer 0.1. The result is 83 included, 40 excluded and 423
+  awaiting-full-text records plus 364 exact-PMID duplicate relations. No extraction, synthesis or
+  claim was produced.

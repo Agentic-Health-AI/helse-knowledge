@@ -1,0 +1,31 @@
+screening:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/screening-runs/2026-08-29
+  source_collection_manifest_sha256: 78220d61a8c00ea03d0b534cc71d022a01455dac66922c5066b8f3bea4ffb817
+  prompt_path: ../../../../prompts/screening-0.1.yaml
+  prompt_sha256: 8f9ffd8cc64f6e04a0399104791d6a9d9c1ec970f02c27fc0086a03d78ece907
+  parser_prompt_id: helse-knowledge/screening-parser/0.1
+  auditor_prompt_id: helse-knowledge/screening-auditor/0.1
+  reducer: screening-reducer/0.1
+  record_count: 546
+  decision_counts:
+    awaiting-full-text: 423
+    excluded: 40
+    included: 83
+  duplicate_relations: 364
+  records:
+    discoveries:
+      path: discoveries.jsonl
+      sha256: e7d6e1350fe6c7263d183cc4c2c763bdc2aa48f1b498d6973d7df5783b9152a2
+      count: 546
+    screenings:
+      path: screenings.jsonl
+      sha256: 75bc8a00dd770f4c793608827a8a3a315202c8ac7da32898d2e9012f9f35748f
+      count: 546
+    relations:
+      path: relations.jsonl
+      sha256: 5c5b5333df1a28f9e102433ae4b46985491249031aa58fb988e3d5ef0be3a3c8
+      count: 364
+    verification_events:
+      path: verification-events.jsonl
+      sha256: 19b394354151a021c258485a7291e0fe025111d1fc6d5f7f12f1374755ad6ba3
+      count: 1638

@@ -15,7 +15,9 @@ The first pilot is **serum/plasma 25-hydroxyvitamin D (25(OH)D)**.
 - [25(OH)D discovery collection](measurements/vitamin-d-25-oh/collection/2026-08-29/README.md)
 - [Licensing](LICENSE.md)
 
-Status: protocol 0.1.1 has collected a PubMed meta-analysis discovery corpus. The 546 unique PubMed
-records are unscreened discovery, not evidence, and no medical claim is published. Run
+Status: protocol 0.1.1 has collected and LLM-screened a PubMed meta-analysis corpus. Of 546 unique
+records, 83 are included, 40 excluded and 423 await full text. Screening is not evidence, and no
+medical claim is published. Run
 `python3 scripts/verify_repository.py --root .` and
-`python3 scripts/verify_discovery_collection.py` to verify the contracts and collection.
+`python3 scripts/verify_discovery_collection.py` plus `python3 scripts/verify_screening.py` to verify
+the contracts, collection and screening.
