@@ -1,6 +1,6 @@
 # Research Corpus Contract 0.1
 
-Status: **draft for implementation**  
+Status: **0.1 pilot implementation — proposed for freeze**
 Pilot: **serum/plasma 25-hydroxyvitamin D (25(OH)D)**  
 Updated: **2026-08-29**
 
@@ -26,8 +26,11 @@ published claims
 Discovery is not evidence. Extraction is not synthesis. A published claim must be traceable through
 all preceding stages.
 
-The contract is not stable until the D-vitamin pilot is useful and a small ALAT pilot fits without
-schema changes.
+This implementation is a synthetic, mechanically verified fixture; it is not human-approved and it
+does not authorize collection. The **immutable collection baseline** is a specific frozen protocol
+version plus its append-only amendments. It governs a collection run. **Profile stability** is a
+later portability judgement: profile 0.1 becomes stable only after this pilot and a small ALAT pilot
+fit without schema changes. Freezing a collection baseline does not imply profile stability.
 
 ## Repository boundary
 
@@ -46,18 +49,14 @@ derived artifacts that must be safe to delete and rebuild.
 2. **Helse Evidence Profile 0.1** supplies versioned research and medical semantics.
 3. **Measurement islands** implement the profile for one normalized measurement.
 
-Pinned upstream OKF specification:
-
-- repository: `GoogleCloudPlatform/knowledge-catalog`
-- path: `okf/SPEC.md`
-- commit: `02317b819c9602fca7cbaa565c215144cef98fe8`
-- SHA-256: `26aa5da029278939f914e578107242d9607d4f2dc5fe153272b82f9ed1030101`
-
-An upstream change requires an explicit profile migration.
+The exact upstream pin is canonical in `profile/okf-0.2-pin.yaml`; the extension-only profile
+references that pin. An upstream change requires an explicit profile migration.
 
 ## Stage A — protocol
 
-The protocol is frozen and versioned before collection. It records:
+The protocol is versioned before collection. A protocol marked `proposed-for-freeze` is a
+specification only; it may become `frozen` only after a real human approval event. A frozen version
+is immutable: later changes are append-only amendments with a reason and a new version. It records:
 
 - normalized analyte, specimens and synonyms;
 - separate research questions;
@@ -197,13 +196,19 @@ Verification must fail when:
 - an exclusion has no reason;
 - an included study has no screening decision;
 - a claim cites missing evidence or synthesis;
-- a numeric claim lacks required unit or applicability;
+- a numeric claim lacks analyte, specimen, unit, method, population, outcome, time horizon or
+  applicability where required;
 - a retracted source supports an active claim;
 - a preprint is represented as peer-reviewed;
 - a stable conclusion is supported only by preprints;
 - a machine proposal claims human verification;
 - generated artifacts are required to rebuild canonical knowledge;
-- personal or private health data is detected.
+- personal or private health data or structured credentials are detected.
+
+The manifest- and schema-driven local verifier also rejects duplicate IDs, undeclared JSONL,
+missing source/query traces, invalid state transitions, broken relations and events, extraction
+from non-included records, preprint/final double-counting, and canonical references to generated
+artifacts. It validates contract mechanics, not medical correctness or human approval.
 
 ## Pilot sequence
 

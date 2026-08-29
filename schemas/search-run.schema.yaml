@@ -1,0 +1,10 @@
+schema: helse-evidence/search-run
+version: "0.1"
+record_type: search-run
+required: [id, record_type, protocol_id, source, query_id, query_or_endpoint, run_status, date_from, date_through, executed_at, retrieved_at, result_count, pagination_log, provenance]
+types: {id: string, record_type: string, protocol_id: string, source: string, query_id: string, query_or_endpoint: string, run_status: string, pagination_log: array, provenance: object}
+enums:
+  source: [pubmed, medrxiv, citation-chaining]
+  run_status: [never-run, executed, failed]
+executed_requires_non_null: [executed_at, retrieved_at, result_count]
+unknown_values: null-or-absent

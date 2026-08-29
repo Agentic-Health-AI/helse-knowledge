@@ -1,0 +1,9 @@
+schema: helse-evidence/synthesis
+version: "0.1"
+record_type: synthesis
+required: [id, record_type, question_id, population, applicability, corpus_manifest_id, search_cutoff, evidence_ids, method, conclusion_status, conclusion, certainty, certainty_rationale, heterogeneity, disagreements, limitations, unresolved_questions, emerging_evidence_ids, interpretations]
+types: {id: string, record_type: string, question_id: string, population: string, applicability: object, corpus_manifest_id: string, search_cutoff: string, evidence_ids: array, method: string, conclusion_status: string, conclusion: string, certainty: string, certainty_rationale: string, heterogeneity: array, disagreements: array, limitations: array, unresolved_questions: array, emerging_evidence_ids: array, interpretations: array}
+enums:
+  conclusion_status: [fixture-only, draft, stable, deprecated]
+stable_preprints_only: forbidden
+unknown_values: null-or-absent

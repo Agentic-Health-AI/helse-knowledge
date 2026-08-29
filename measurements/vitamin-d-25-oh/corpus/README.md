@@ -1,4 +1,5 @@
 # Corpus
 
-This directory remains empty until the protocol is frozen. Discovery, screening and inclusion will
-be separate canonical JSONL records. Discovery cannot feed synthesis directly.
+Discovery, relations and screening are separate canonical JSONL records. The committed records use
+only `example.invalid` identifiers and synthetic aggregate placeholders to prove state and relation
+checks. They are not discovered research and cannot feed a medical synthesis.

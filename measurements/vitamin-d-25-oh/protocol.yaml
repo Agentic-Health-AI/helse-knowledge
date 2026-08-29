@@ -1,0 +1,165 @@
+protocol:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  version: "0.1.0"
+  status: proposed-for-freeze
+  protocol_owner: pending-human-assignment
+  proposed_at: "2026-08-29"
+  search_cutoff: "2026-08-29"
+  collection_allowed: false
+  freeze_requirement: A real human protocol owner must approve every blocking decision and add a human approval event before status can become frozen.
+  immutable_collection_baseline: A frozen protocol version and its append-only amendments; freezing does not imply profile stability.
+  amendment_policy:
+    mode: append-only
+    required_fields: [amendment_id, date, reason, approved_by_human, affected_search_runs]
+    amendments: []
+
+  analyte:
+    canonical_name: serum/plasma 25-hydroxyvitamin D
+    short_name: 25(OH)D
+    synonyms: [25-hydroxyvitamin D, 25 hydroxyvitamin D, calcidiol, calcifediol]
+    specimens: [serum, plasma]
+    total_fraction: total 25(OH)D when reported; D2 and D3 fractions retained separately when available
+    unit_policy: Preserve reported units and conversion provenance; do not infer or silently convert an unknown unit.
+
+  scope:
+    primary_population: adults aged 18 years or older
+    primary_strata: [general-community, primary-care, outpatient, inpatient, older-adult]
+    settings: [community, primary-care, hospital, laboratory, research]
+    special_populations:
+      values: [pregnancy, chronic-kidney-disease, malabsorption, institutionalized-care]
+      handling: Include only when eligible for the question, tag separately, and assume no portability to the primary population.
+    pilot_outcomes: [fractures, falls, all-cause-mortality, hypercalcemia, nephrolithiasis, renal-adverse-events]
+
+  questions:
+    - id: q1-measurement
+      question: How is serum/plasma 25(OH)D measured, standardized, and converted?
+      population: Human serum/plasma samples, adult cohorts, and relevant reference materials.
+      settings: [laboratory, community, clinical]
+      exposure_or_intervention: Assay, calibration, standardization, specimen handling, or unit conversion.
+      comparators: Reference method/material, alternative assay, calibration, specimen, or unit.
+      outcomes: [bias, imprecision, agreement, traceability, commutability, calibration, conversion]
+      eligible_designs: [analytical-validation, method-comparison, standardization-study, reference-material-study, proficiency-study]
+    - id: q2-distribution
+      question: How do measured distributions vary by population, season, and setting?
+      population: Adults in a defined sampling frame; special populations separately tagged.
+      settings: [community, primary-care, outpatient, inpatient, research]
+      exposure_or_intervention: Measured serum/plasma 25(OH)D.
+      comparators: Population stratum, season, latitude, setting, assay, or calendar period.
+      outcomes: [distribution, central-tendency, dispersion, quantiles, prevalence-at-reported-thresholds]
+      eligible_designs: [population-survey, cross-sectional, cohort-baseline]
+    - id: q3-association
+      question: Which measured levels are associated with the pilot outcomes?
+      population: Adults with serum/plasma 25(OH)D measured before the outcome where temporality is required.
+      settings: [community, primary-care, outpatient, inpatient]
+      exposure_or_intervention: Measured serum/plasma 25(OH)D.
+      comparators: Reported reference level, category, or continuous contrast.
+      outcomes: [fractures, falls, all-cause-mortality]
+      eligible_designs: [prospective-cohort, nested-case-control, case-cohort]
+    - id: q4-intervention
+      question: What do randomized vitamin D supplementation studies show for the pilot outcomes?
+      population: Adults; special populations separately tagged.
+      settings: [community, primary-care, outpatient, inpatient]
+      exposure_or_intervention: Vitamin D supplementation with baseline or follow-up serum/plasma 25(OH)D reported.
+      comparators: [placebo, no-supplementation, alternative-regimen]
+      outcomes: [fractures, falls, all-cause-mortality]
+      eligible_designs: [randomized-controlled-trial, cluster-randomized-trial, factorial-randomized-trial-with-extractable-contrast]
+    - id: q5-harm
+      question: What harms are associated with high measured levels or supplementation?
+      population: Adults; special populations separately tagged.
+      settings: [community, primary-care, outpatient, inpatient]
+      exposure_or_intervention: High measured serum/plasma 25(OH)D or vitamin D supplementation.
+      comparators: [lower-measured-level, placebo, no-supplementation, alternative-regimen]
+      outcomes: [hypercalcemia, nephrolithiasis, renal-adverse-events, falls, fractures, all-cause-mortality]
+      eligible_designs: [randomized-controlled-trial, prospective-cohort, nested-case-control, case-cohort]
+    - id: q6-disagreement
+      question: Where do eligible high-quality studies disagree, and what explains it?
+      population: The populations represented by eligible q1-q5 studies.
+      settings: [all-eligible-q1-q5-settings]
+      exposure_or_intervention: Question-specific exposure or intervention.
+      comparators: Conflicting eligible studies or syntheses.
+      outcomes: [direction, magnitude, heterogeneity, directness, precision, risk-of-bias, assay-and-population-explanations]
+      eligible_designs: [eligible-q1-q5-designs, systematic-review-for-context-and-citation-chaining]
+
+  eligibility:
+    languages: no-restriction
+    translation: Machine translation may assist screening; inclusion and extraction require human-verifiable source text.
+    date_range: {from: database-inception, through: "2026-08-29"}
+    full_text: Obtain lawfully. If unavailable, use awaiting-full-text; never infer missing content or republish restricted full text.
+    include: [human-research, declared-eligible-population, serum-or-plasma-25-oh-d, eligible-design, pilot-question-and-outcome]
+    controlled_exclusion_reasons: [wrong-population, wrong-setting, wrong-analyte-or-specimen, wrong-question, wrong-design, wrong-outcome, non-human, unavailable-full-text, duplicate]
+
+  discovery:
+    run_status: never-run
+    common_requirements:
+      - Persist the literal query or endpoint, protocol version, cutoff, execution and retrieval timestamps, result count, pagination log, response hashes, and collector provenance.
+      - Preserve returned records before screening; a query result is discovery, not evidence.
+    pubmed:
+      documentation:
+        - https://pubmed.ncbi.nlm.nih.gov/help/
+        - https://www.ncbi.nlm.nih.gov/books/NBK25500/
+      date_clause: '1900/01/01:2026/08/29[Date - Publication]'
+      execution:
+        esearch_count: 'GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={urlencoded_literal_query}&retmode=json&retmax=0&usehistory=y'
+        esearch_ids: 'Repeat ESearch with retstart pagination and persist ordered PMIDs plus QueryTranslation; recursively partition by publication date if a PubMed result limit prevents complete retrieval.'
+        efetch: 'GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={comma_separated_pmids}&retmode=xml in deterministic batches of at most 200.'
+      query_families:
+        q1-measurement: '(("Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (assay*[Title/Abstract] OR measur*[Title/Abstract] OR standard*[Title/Abstract] OR calibrat*[Title/Abstract] OR immunoassay*[Title/Abstract] OR "liquid chromatography"[Title/Abstract] OR "mass spectrometry"[Title/Abstract] OR "LC-MS/MS"[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q2-distribution: '(("Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (distribution*[Title/Abstract] OR prevalence[Title/Abstract] OR season*[Title/Abstract] OR population-based[Title/Abstract] OR survey*[Title/Abstract] OR cohort*[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q3-association: '(("Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND ("Fractures, Bone"[MeSH Terms] OR "Accidental Falls"[MeSH Terms] OR "Mortality"[MeSH Terms] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND ("Cohort Studies"[MeSH Terms] OR prospective[Title/Abstract] OR cohort[Title/Abstract] OR "nested case-control"[Title/Abstract] OR "case-cohort"[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q4-intervention: '((("Vitamin D"[MeSH Terms] OR cholecalciferol[Title/Abstract] OR ergocalciferol[Title/Abstract]) AND (supplement*[Title/Abstract] OR dose*[Title/Abstract])) AND ("25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND ("Randomized Controlled Trial"[Publication Type] OR random*[Title/Abstract] OR placebo[Title/Abstract]) AND (fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q5-high-measured-level: '(("25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND (high[Title/Abstract] OR excess*[Title/Abstract] OR toxic*[Title/Abstract]) AND (hypercalcemia[Title/Abstract] OR nephrolithiasis[Title/Abstract] OR "kidney stone"[Title/Abstract] OR renal[Title/Abstract] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q5-supplementation-harm: '((("Vitamin D"[MeSH Terms] OR cholecalciferol[Title/Abstract] OR ergocalciferol[Title/Abstract]) AND (supplement*[Title/Abstract] OR dose*[Title/Abstract])) AND (adverse[Title/Abstract] OR harm*[Title/Abstract] OR safety[Title/Abstract] OR hypercalcemia[Title/Abstract] OR nephrolithiasis[Title/Abstract] OR "kidney stone"[Title/Abstract] OR renal[Title/Abstract] OR fracture*[Title/Abstract] OR fall*[Title/Abstract] OR mortality[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+        q6-disagreement-context: '(("Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms] OR "25-hydroxyvitamin D"[Title/Abstract] OR "25 hydroxyvitamin D"[Title/Abstract] OR "25(OH)D"[Title/Abstract] OR calcidiol[Title/Abstract] OR calcifediol[Title/Abstract]) AND ("Systematic Review"[Publication Type] OR "Meta-Analysis"[Publication Type] OR heterogeneity[Title/Abstract] OR inconsisten*[Title/Abstract]) AND 1900/01/01:2026/08/29[Date - Publication])'
+    medrxiv:
+      documentation: https://api.biorxiv.org/details/medrxiv/help
+      endpoint: https://api.biorxiv.org/details/medrxiv/2019-06-25/2026-08-29/{cursor}/json
+      pagination: Start cursor at 0; persist each raw response and SHA-256; advance by the number returned (normally 30); stop only when cursor reaches messages.total or a zero-record page is returned.
+      versions: Preserve every DOI+version manifestation; never overwrite an earlier version.
+      local_filter:
+        frozen: true
+        fields: [title, abstract]
+        normalization: Unicode NFKC followed by casefold; join title and abstract with one newline.
+        regex: '(?:25\s*[- ]?\s*hydroxy\s*vitamin\s*d|25\s*\(\s*oh\s*\)\s*d|calcidiol|calcifediol)'
+      note: The official API is date-based, not topical. Apply the frozen local filter and retain the unfiltered page log for audit.
+
+  screening:
+    procedure: Two independent human screening decisions after protocol freeze; disagreements go once to a designated human adjudicator.
+    machine_role: A machine may propose a decision but cannot satisfy an independent human decision or adjudication.
+    states: [discovered, screening, included, excluded, awaiting-full-text, duplicate, superseded-by-publication, retracted]
+    allowed_transitions:
+      - [discovered, screening]
+      - [discovered, duplicate]
+      - [screening, included]
+      - [screening, excluded]
+      - [screening, awaiting-full-text]
+      - [awaiting-full-text, screening]
+      - [included, superseded-by-publication]
+      - [included, retracted]
+
+  relations:
+    deduplication_order: [exact-pmid, normalized-doi, medrxiv-doi-plus-version, conservative-normalized-title-and-year-candidate]
+    doi_normalization: "Lowercase, trim whitespace, and remove an https://doi.org/ or doi: prefix; preserve the source value separately."
+    candidate_matching: Title/year candidates require human review and never auto-merge.
+    manifestations: Link preprint and final to one study_id; synthesis may use at most one active manifestation per study.
+    preprint_final_matching: Prefer medRxiv published DOI, then exact normalized DOI/PMID relations; fuzzy title/author/year matches are candidates requiring human confirmation.
+    corrections_retractions: Preserve notice and affected record as separate records with correction-of or retraction-of relations and append-only state history.
+
+  extraction:
+    required_fields: [study_design, preregistration, population, setting, sample_size, specimen, analyte, assay, unit, calibration, intervention, comparator, exposure, outcome, follow_up, analysis_population, estimate, uncertainty, model_adjustments, missing_data, attrition, confounders, funding, conflicts, limitations, risk_of_bias, source_statements, reviewer_assessments, interpretations, source_locations, generator, verification_events]
+    rules:
+      - Extract only an included active manifestation.
+      - Preserve unknown as null; never invent metadata.
+      - Keep source statements, reviewer assessments, and interpretations separate.
+      - Every material field must be source-bound or explicitly null.
+  risk_of_bias_proposals:
+    q1-measurement: adapted analytical-method checklist pending human approval
+    q2-distribution: JBI prevalence checklist pending human approval
+    q3-association: ROBINS-E pending human approval
+    q4-intervention: RoB 2 pending human approval
+    q5-harm: RoB 2 or ROBINS-E by design pending human approval
+    q6-disagreement: instrument inherited from each underlying question
+  synthesis:
+    method: structured-narrative-only
+    meta_analysis: Not permitted until a human-approved amendment defines comparability, effect measures, model, heterogeneity, and sensitivity analyses.
+    inputs: Only included active manifestations with source-bound extractions.
+    preprints: May be shown as emerging evidence but cannot alone support a stable conclusion.

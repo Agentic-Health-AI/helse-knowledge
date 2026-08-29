@@ -1,0 +1,17 @@
+manifest:
+  id: https://example.invalid/helse-knowledge/synthetic/manifest/0.1
+  version: "0.1"
+  mode: synthetic-fixture
+  generated_artifacts_required: false
+  protocol: protocol.yaml
+  profile: ../../profile/helse-evidence-profile.yaml
+  okf_pin: ../../profile/okf-0.2-pin.yaml
+  records:
+    searches: {path: searches/fixture-search-runs.jsonl, schema: ../../schemas/search-run.schema.yaml}
+    discoveries: {path: corpus/fixture-discovery.jsonl, schema: ../../schemas/discovery.schema.yaml}
+    screenings: {path: corpus/fixture-screening.jsonl, schema: ../../schemas/screening.schema.yaml}
+    relations: {path: corpus/fixture-relations.jsonl, schema: ../../schemas/relation-study-identity.schema.yaml}
+    extractions: {path: evidence/fixture-extractions.jsonl, schema: ../../schemas/extraction.schema.yaml}
+    verification_events: {path: evidence/fixture-verification-events.jsonl, schema: ../../schemas/verification-event.schema.yaml}
+    syntheses: {path: synthesis/fixture-synthesis.jsonl, schema: ../../schemas/synthesis.schema.yaml}
+    claims: {path: claims/fixture-claims.jsonl, schema: ../../schemas/claim.schema.yaml}

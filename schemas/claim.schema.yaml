@@ -1,0 +1,11 @@
+schema: helse-evidence/claim
+version: "0.1"
+record_type: claim
+required: [id, record_type, claim_type, synthesis_id, evidence_ids, status, statement, numeric_value, analyte, specimen, unit, method, population, outcome, time_horizon, applicability]
+types: {id: string, record_type: string, claim_type: string, synthesis_id: string, evidence_ids: array, status: string, statement: string, applicability: object}
+enums:
+  claim_type: [statistical-reference-interval, clinical-decision-threshold, outcome-association, intervention-effect, measurement-or-assay, safety-or-harm, authority-recommendation, uncertainty-or-disagreement]
+  status: [fixture-only, draft, active, deprecated]
+numeric_requires: [analyte, specimen, unit, method, population, outcome, time_horizon, applicability]
+active_retraction_support: forbidden
+unknown_values: null-or-absent

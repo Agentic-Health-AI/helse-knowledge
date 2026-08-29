@@ -1,16 +1,26 @@
 profile:
   id: https://github.com/Agentic-Health-AI/helse-knowledge/profile/0.1
   name: Helse Evidence Profile
-  version: "0.1-draft"
-  status: draft
+  version: "0.1-proposed"
+  status: proposed-for-freeze
   namespace: helse_evidence
 
-upstream_okf:
-  version: "0.2"
-  repository: https://github.com/GoogleCloudPlatform/knowledge-catalog
-  specification_path: okf/SPEC.md
-  resolved_commit: 02317b819c9602fca7cbaa565c215144cef98fe8
-  sha256: 26aa5da029278939f914e578107242d9607d4f2dc5fe153272b82f9ed1030101
+extends:
+  okf_pin_id: https://github.com/Agentic-Health-AI/helse-knowledge/profile/pins/okf-0.2/1
+  local_pin_path: okf-0.2-pin.yaml
+
+schemas:
+  version: "0.1"
+  directory: ../schemas
+  records:
+    - search-run
+    - discovery
+    - screening
+    - relation-study-identity
+    - extraction
+    - verification-event
+    - synthesis
+    - claim
 
 canonical_formats:
   concepts: markdown
@@ -22,3 +32,4 @@ verification:
   human_events_require_actual_human_review: true
   stable_claim_from_preprints_only: forbidden
   personal_health_data: forbidden
+  machine_may_only_propose: true

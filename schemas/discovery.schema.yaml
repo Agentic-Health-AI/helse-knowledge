@@ -1,0 +1,12 @@
+schema: helse-evidence/discovery
+version: "0.1"
+record_type: discovery
+required: [id, record_type, study_id, source, source_url, search_run_id, query_ids, retrieved_at, title, authors, venue, publication_date, state, peer_review_status, version_status, identifiers, provenance]
+types: {id: string, record_type: string, study_id: string, source: string, source_url: string, search_run_id: string, query_ids: array, state: string, peer_review_status: string, version_status: string, identifiers: object, provenance: object}
+enums:
+  source: [pubmed, medrxiv, citation-chaining]
+  state: [discovered, screening, included, excluded, awaiting-full-text, duplicate, superseded-by-publication, retracted]
+  peer_review_status: [peer-reviewed, preprint, unknown]
+  version_status: [preprint-version, final-publication, correction-notice, retraction-notice, unknown]
+unknown_values: null-or-absent
+forbidden_private_fields: [patient_id, person_id, cpr, medical_record_number, health_record, private_clinical_record, access_token, password, api_key, credential]
