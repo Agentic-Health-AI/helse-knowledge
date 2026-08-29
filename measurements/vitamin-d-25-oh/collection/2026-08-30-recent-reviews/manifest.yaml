@@ -1,0 +1,33 @@
+collection:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.3/collections/2026-08-30-recent-reviews
+  mode: discovery-with-transient-abstracts
+  source: pubmed
+  base_protocol_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  base_protocol_sha256: 1c6bf4bce07de959eb24c2479f81f83289af2ddef087d8e7f009a6a889889a36
+  selection_amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.2
+  selection_amendment_sha256: dfe8ba4b92c6909b20436c934fc62f17be43e13ccf67f114ad517e644b71b0f9
+  storage_amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.3
+  storage_amendment_sha256: 27955abc2e7ff09c87a028b9611223f0b02959cf5e26baa7f440d40ba9fba34b
+  search_cutoff: '2026-08-29'
+  generated_at: '2026-08-29T23:07:51Z'
+  query_hits: 46
+  unique_pmids: 39
+  abstracts_fetched: 39
+  abstract_text_committed: false
+  snapshot_notice: Dated PubMed snapshot; it may not reflect later NLM corrections
+    or updates.
+  source_acknowledgement: PubMed data provided by the U.S. National Library of Medicine
+    (NLM). NLM does not endorse this project.
+  records:
+    searches:
+      path: search-runs.jsonl
+      sha256: 75bab9e01768a0af08c8d3b032592adb31b985680237afe6ae473f1884519054
+      count: 3
+    discoveries:
+      path: discoveries.jsonl
+      sha256: 9da01d047566a7507fcf79f60a3065cf361c3daaf27d83b4ca5c695c7f891e33
+      count: 39
+    requests:
+      path: requests.jsonl
+      sha256: af1c7d8599952424c1010c4db315f781d2b2f8229a6ce478011e1f97750442de
+      count: 4

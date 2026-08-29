@@ -10,6 +10,7 @@ deficiency, sufficiency, optimal levels, supplementation or treatment.
 - [Active 0.1.3 rights-safe abstract amendment](amendments/0.1.3-rights-safe-abstracts.yaml)
 - [0.1.2 latest serum-review selection amendment](amendments/0.1.2-latest-serum-reviews.yaml)
 - [Superseded 0.1.1 calibration amendment](amendments/0.1.1-meta-analysis-pilot.yaml)
+- [Current recent-review collection](collection/2026-08-30-recent-reviews/README.md)
 - [Collected PubMed discovery corpus](collection/2026-08-29/README.md)
 - [LLM screening run](screening/2026-08-29/README.md)
 - [Full-text availability inventory](fulltext/2026-08-30/README.md)
@@ -19,3 +20,8 @@ deficiency, sufficiency, optimal levels, supplementation or treatment.
 - [Syntheses](synthesis/README.md)
 - [Claims](claims/README.md)
 - [Change log](log.md)
+
+The current collection contains 39 unique PubMed review candidates published from 2021 through
+2026. All 39 abstracts were fetched for later LLM screening and extraction, but raw text is retained
+only in an ignored local cache. No candidate is included evidence until the separate screening and
+extraction stages pass.

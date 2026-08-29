@@ -21,6 +21,11 @@
 
 ## 2026-08-30
 
+- Executed the three frozen 0.1.2 PubMed queries under the 0.1.3 rights-safe storage contract. The
+  46 query hits deduplicate to 39 review candidates published from 2021 through 2026. PubMed
+  returned an abstract for every PMID; canonical records preserve hashes and provenance while the
+  raw text remains in an ignored local cache. This is discovery, not screening, extraction,
+  synthesis or a medical claim.
 - Froze amendment 0.1.3 after NLM's terms showed that PubMed abstracts may retain publisher or
   author copyright. Abstracts remain sufficient processing sources but are cached transiently;
   canonical records retain their PubMed identity, hash and retrieval provenance without raw text.

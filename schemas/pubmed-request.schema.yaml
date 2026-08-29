@@ -1,0 +1,8 @@
+schema: helse-evidence/pubmed-request
+version: "0.1"
+record_type: pubmed-request
+required: [id, record_type, request_type, request_url, retrieved_at, requested_pmids, response_sha256, response_body_stored, response_body]
+types: {id: string, record_type: string, request_type: string, request_url: string, retrieved_at: string, requested_pmids: array, response_sha256: string, response_body_stored: boolean, response_body: string}
+enums:
+  request_type: [esearch, efetch]
+unknown_values: null-or-absent
