@@ -1,0 +1,18 @@
+fulltext_availability:
+  id: https://github.com/Agentic-Health-AI/helse-knowledge/fulltext-availability/2026-08-30
+  source_screening_manifest_sha256: 8198ebfe1001dfb6906ed41d1effa9452a237edf6b88f03273fd54b08a6a597b
+  checked_at: '2026-08-29T22:16:29Z'
+  record_count: 506
+  access_counts:
+    not-in-pmc: 230
+    pmc-copyrighted-or-unknown: 40
+    pmc-open-access: 236
+  extraction_allowed: 236
+  records:
+    path: availability.jsonl
+    sha256: 85acbc02d2c4801c87f3208c90bc01a8dd5adf197e076b90b6572f1015d043ad
+    count: 506
+  requests:
+    path: requests.jsonl
+    sha256: 4c49659d284d398895c6d2eb8045a2fea647c5ef94b5af8120f928dd7bde8b1f
+    count: 9

@@ -18,3 +18,11 @@
   then applied screening-reducer 0.1. The result is 83 included, 40 excluded and 423
   awaiting-full-text records plus 364 exact-PMID duplicate relations. No extraction, synthesis or
   claim was produced.
+
+## 2026-08-30
+
+- Inventoried PMC and PMC Open Access Subset availability for all 506 non-excluded screening
+  records. Exact public API responses are preserved so the verifier can reconstruct every status.
+  The result is 236 Open Access retrieval candidates, 40 PMC records without confirmed reuse status
+  and 230 records not found in PMC. No full text was downloaded and no extraction, synthesis or
+  claim was produced.

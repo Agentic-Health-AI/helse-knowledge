@@ -1,0 +1,9 @@
+schema: helse-evidence/fulltext-availability
+version: "0.1"
+record_type: fulltext-availability
+required: [id, record_type, record_id, pmid, screening_decision, pmcid, pmc_live, release_date, open_access_subset, access_status, extraction_allowed, checked_at, provenance]
+types: {id: string, record_type: string, record_id: string, pmid: string, screening_decision: string, pmcid: string, pmc_live: boolean, release_date: string, open_access_subset: boolean, access_status: string, extraction_allowed: boolean, checked_at: string, provenance: object}
+enums:
+  screening_decision: [included, awaiting-full-text]
+  access_status: [pmc-open-access, pmc-copyrighted-or-unknown, not-in-pmc, embargoed]
+unknown_values: null-or-absent

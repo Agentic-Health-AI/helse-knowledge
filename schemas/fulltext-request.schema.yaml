@@ -1,0 +1,8 @@
+schema: helse-evidence/fulltext-request
+version: "0.1"
+record_type: fulltext-request
+required: [id, record_type, request_type, page, request_url, retrieved_at, requested_pmids, response_sha256, response_body]
+types: {id: string, record_type: string, request_type: string, page: integer, request_url: string, retrieved_at: string, requested_pmids: array, response_sha256: string, response_body: string}
+enums:
+  request_type: [id-converter, open-access-filter]
+unknown_values: forbidden

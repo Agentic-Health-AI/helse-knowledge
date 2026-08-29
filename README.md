@@ -13,11 +13,13 @@ The first pilot is **serum/plasma 25-hydroxyvitamin D (25(OH)D)**.
 - [Helse Evidence Profile extension](profile/helse-evidence-profile.yaml)
 - [Pinned OKF 0.2](profile/okf-0.2-pin.yaml)
 - [25(OH)D discovery collection](measurements/vitamin-d-25-oh/collection/2026-08-29/README.md)
+- [25(OH)D full-text availability](measurements/vitamin-d-25-oh/fulltext/2026-08-30/README.md)
 - [Licensing](LICENSE.md)
 
 Status: protocol 0.1.1 has collected and LLM-screened a PubMed meta-analysis corpus. Of 546 unique
-records, 83 are included, 40 excluded and 423 await full text. Screening is not evidence, and no
-medical claim is published. Run
+records, 83 are included, 40 excluded and 423 await full text. The 506 non-excluded records have a
+source-bound PMC availability inventory; 236 are eligible for later Open Access retrieval. No full
+text has been downloaded, screening is not evidence, and no medical claim is published. Run
 `python3 scripts/verify_repository.py --root .` and
-`python3 scripts/verify_discovery_collection.py` plus `python3 scripts/verify_screening.py` to verify
-the contracts, collection and screening.
+`python3 scripts/verify_discovery_collection.py`, `python3 scripts/verify_screening.py` and
+`python3 scripts/verify_fulltext_availability.py` to verify every completed stage.

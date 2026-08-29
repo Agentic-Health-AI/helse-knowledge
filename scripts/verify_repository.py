@@ -189,7 +189,7 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
     listed_jsonl = {path.resolve() for path in bundle["record_paths"].values()}
     actual_jsonl = {
         path for path in bundle["island"].rglob("*.jsonl")
-        if not {"collection", "screening"} & set(path.parts)
+        if not {"collection", "screening", "fulltext"} & set(path.parts)
     }
     if listed_jsonl != actual_jsonl:
         fail("unlisted canonical JSONL file")
