@@ -17,7 +17,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 ISLAND_REL = Path("measurements/vitamin-d-25-oh")
 MANIFEST_REL = ISLAND_REL / "corpus-manifest.yaml"
-AMENDMENT_REL = ISLAND_REL / "amendments/0.1.1-meta-analysis-pilot.yaml"
+AMENDMENT_REL = ISLAND_REL / "amendments/0.1.2-latest-serum-reviews.yaml"
 EXPECTED_PIN = {
     "upstream_version": "0.2",
     "repository": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
@@ -41,6 +41,11 @@ EXPECTED_QUERY_IDS = {
     "q5-high-measured-level",
     "q5-supplementation-harm",
     "q6-disagreement-context",
+}
+ACTIVE_AMENDMENT_QUERY_IDS = {
+    "recent-q1-measurement",
+    "recent-q2-distribution",
+    "recent-q3-outcome-thresholds",
 }
 TYPE_CHECKS = {
     "array": list,
@@ -221,30 +226,46 @@ def validate_bundle(bundle: dict[str, Any]) -> list[str]:
 
     amendment = amendment_document.get("amendment", {})
     amendment_scope = amendment_document.get("scope", {})
+    amendment_method = amendment_document.get("method", {})
     amendment_pubmed = amendment_document.get("pubmed", {})
     base_protocol_hash = hashlib.sha256((bundle["island"] / "protocol.yaml").read_bytes()).hexdigest()
     if amendment.get("status") != "frozen" or amendment.get("base_protocol_id") != protocol.get("id"):
         fail("active protocol amendment identity")
     if amendment.get("input_hashes", {}).get("protocol.yaml") != base_protocol_hash:
         fail("active protocol amendment base hash")
+    previous_amendment = bundle["island"] / "amendments/0.1.1-meta-analysis-pilot.yaml"
+    method_path = bundle["root"] / "docs/latest-established-review-method.md"
+    if amendment.get("input_hashes", {}).get(previous_amendment.name) != hashlib.sha256(previous_amendment.read_bytes()).hexdigest():
+        fail("active protocol amendment predecessor hash")
+    if amendment.get("input_hashes", {}).get(method_path.name) != hashlib.sha256(method_path.read_bytes()).hexdigest():
+        fail("active review method hash")
     required_amendment_fields = set(protocol.get("amendment_policy", {}).get("required_fields", []))
     if not required_amendment_fields <= set(amendment):
         fail("active protocol amendment completeness")
-    if amendment_scope.get("sources") != ["pubmed"] or amendment_scope.get("q6_disagreement") != "derived-from-included-q1-q5-records":
+    if amendment.get("supersedes_amendment") != "https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1":
+        fail("active protocol amendment predecessor")
+    if amendment_scope.get("sources") != ["pubmed"] or amendment_scope.get("specimens") != ["serum", "plasma"] or amendment_scope.get("publication_window") != {"from": "2021-01-01", "through": "2026-08-29"}:
         fail("active protocol amendment scope")
-    narrow_query_ids = EXPECTED_QUERY_IDS - {"q6-disagreement-context"}
+    abstract_policy = amendment_method.get("abstract", {})
+    if abstract_policy.get("required") is not True or abstract_policy.get("canonical_source") is not True or abstract_policy.get("full_text_fallback") != "forbidden-for-this-run":
+        fail("active abstract source policy")
     narrow_queries = amendment_pubmed.get("query_families", {})
-    if set(narrow_queries) != narrow_query_ids or set(amendment_pubmed.get("expected_query_ids", [])) != narrow_query_ids:
+    if set(narrow_queries) != ACTIVE_AMENDMENT_QUERY_IDS or set(amendment_pubmed.get("expected_query_ids", [])) != ACTIVE_AMENDMENT_QUERY_IDS:
         fail("active protocol amendment query set")
-    required_analyte_terms = ('"Calcifediol"[MeSH Terms]', '"25-hydroxyvitamin D"[Title/Abstract]', '"25(OH)D"[Title/Abstract]')
     for query_id, query in narrow_queries.items():
-        if '"Vitamin D"[MeSH Terms] OR "Calcifediol"[MeSH Terms]' in query:
+        if '"Vitamin D"[MeSH Terms]' in query or '"Calcifediol"[MeSH Terms]' in query:
             fail(f"active query has broad analyte branch: {query_id}")
-        if not all(term in query for term in required_analyte_terms):
+        if not all(term in query for term in ('"25-hydroxyvitamin D"[Title]', '"25(OH)D"[Title]')):
             fail(f"active query lacks 25(OH)D core: {query_id}")
-        if '("Meta-Analysis"[Publication Type] OR meta-analy*[Title])' not in query:
-            fail(f"active query lacks meta-analysis gate: {query_id}")
-        if "2026/08/29[Date - Publication]" not in query:
+        if not all(term in query for term in ("serum[Title/Abstract]", "plasma[Title/Abstract]", "circulating[Title/Abstract]", "blood[Title/Abstract]")):
+            fail(f"active query lacks specimen core: {query_id}")
+        if '(meta-analy*[Title] OR "systematic review"[Title])' not in query:
+            fail(f"active query lacks review gate: {query_id}")
+        if "hasabstract" not in query:
+            fail(f"active query lacks abstract gate: {query_id}")
+        if ") NOT (protocol[Title] OR preprint[Publication Type] OR \"Retracted Publication\"[Publication Type])" not in query:
+            fail(f"active query lacks final-publication gate: {query_id}")
+        if "2021/01/01:2026/08/29[Date - Publication]" not in query:
             fail(f"active query lacks frozen cutoff: {query_id}")
     llm_policy = protocol.get("llm_processing", {})
     if llm_policy.get("human_fallback") != "forbidden" or not llm_policy.get("required_run_provenance"):

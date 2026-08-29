@@ -21,6 +21,9 @@
 
 ## 2026-08-30
 
+- Froze amendment 0.1.2 and the reusable latest-established-review method. The active search now
+  requires a recent, analyte-specific title, explicit blood/serum/plasma context and a PubMed
+  abstract. The 0.1.1 corpus remains an over-broad calibration run and is not active evidence.
 - Inventoried PMC and PMC Open Access Subset availability for all 506 non-excluded screening
   records. Exact public API responses are preserved so the verifier can reconstruct every status.
   The result is 236 Open Access retrieval candidates, 40 PMC records without confirmed reuse status

@@ -1,0 +1,53 @@
+amendment:
+  amendment_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.2
+  base_protocol_id: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.0
+  version: "0.1.2"
+  status: frozen
+  date: "2026-08-30"
+  reason: Replace the over-broad historical meta-analysis calibration with a current, specimen-bound review corpus whose preserved PubMed abstracts are the complete source scope.
+  validator_version: verify_repository.py/0.1.2
+  supersedes_amendment: https://github.com/Agentic-Health-AI/helse-knowledge/protocols/vitamin-d-25-oh/0.1.1
+  input_hashes:
+    protocol.yaml: 1c6bf4bce07de959eb24c2479f81f83289af2ddef087d8e7f009a6a889889a36
+    0.1.1-meta-analysis-pilot.yaml: 5aa1380cacf7d7d3f7d63cb0e52faeb1cc5f64028186e2ac1197626fcee146bc
+    latest-established-review-method.md: 03956f4a932998b05568ee5d0a03a0dedca7b6d8fdb0c2e6518a3e26ba879a21
+  affected_search_runs: []
+
+scope:
+  evidence_unit: final-publication systematic-review-or-meta-analysis
+  population: adults
+  analyte: 25-hydroxyvitamin D
+  specimens: [serum, plasma]
+  sources: [pubmed]
+  publication_window: {from: "2021-01-01", through: "2026-08-29"}
+  excluded: [preprints, protocols, retracted-publications, child-only, adolescent-only, pregnancy-only, disease-adjacent-without-measured-25-oh-d-analysis]
+  questions: [recent-q1-measurement, recent-q2-distribution, recent-q3-outcome-thresholds]
+
+method:
+  contract: docs/latest-established-review-method.md
+  recent_first: Search the latest five calendar years through the cutoff.
+  fallback: If a question has no eligible review, extend backwards in five-year blocks and stop after the first block yielding an eligible review.
+  newest_order: [reported-literature-search-end-date, publication-date]
+  overlap: Older overlapping reviews remain provenance but are not counted as independent evidence.
+  abstract:
+    required: true
+    canonical_source: true
+    sufficient_for_screening_and_extraction: true
+    full_text_fallback: forbidden-for-this-run
+    missing_or_conflicting_fields: unknown-or-unresolved
+    source_spans_required: true
+
+pubmed:
+  expected_query_ids: [recent-q1-measurement, recent-q2-distribution, recent-q3-outcome-thresholds]
+  query_families:
+    recent-q1-measurement: >-
+      (("25-hydroxyvitamin D"[Title] OR "25 hydroxyvitamin D"[Title] OR "25(OH)D"[Title] OR calcidiol[Title] OR calcifediol[Title]) AND (serum[Title/Abstract] OR plasma[Title/Abstract] OR circulating[Title/Abstract] OR blood[Title/Abstract]) AND (assay*[Title/Abstract] OR standard*[Title/Abstract] OR calibrat*[Title/Abstract] OR immunoassay*[Title/Abstract] OR "mass spectrometry"[Title/Abstract]) AND (meta-analy*[Title] OR "systematic review"[Title]) AND hasabstract AND 2021/01/01:2026/08/29[Date - Publication]) NOT (protocol[Title] OR preprint[Publication Type] OR "Retracted Publication"[Publication Type])
+    recent-q2-distribution: >-
+      (("25-hydroxyvitamin D"[Title] OR "25 hydroxyvitamin D"[Title] OR "25(OH)D"[Title] OR "vitamin D status"[Title]) AND (serum[Title/Abstract] OR plasma[Title/Abstract] OR circulating[Title/Abstract] OR blood[Title/Abstract]) AND (distribution*[Title/Abstract] OR prevalence[Title/Abstract] OR reference[Title/Abstract] OR threshold*[Title/Abstract] OR population-based[Title/Abstract] OR "healthy adults"[Title/Abstract]) AND (meta-analy*[Title] OR "systematic review"[Title]) AND hasabstract AND 2021/01/01:2026/08/29[Date - Publication]) NOT (protocol[Title] OR preprint[Publication Type] OR "Retracted Publication"[Publication Type])
+    recent-q3-outcome-thresholds: >-
+      (("25-hydroxyvitamin D"[Title] OR "25 hydroxyvitamin D"[Title] OR "25(OH)D"[Title]) AND (serum[Title/Abstract] OR plasma[Title/Abstract] OR circulating[Title/Abstract] OR blood[Title/Abstract]) AND (mortality[Title/Abstract] OR fracture*[Title/Abstract] OR fall*[Title/Abstract]) AND (dose-response[Title/Abstract] OR threshold*[Title/Abstract] OR categor*[Title/Abstract]) AND (meta-analy*[Title] OR "systematic review"[Title]) AND hasabstract AND 2021/01/01:2026/08/29[Date - Publication]) NOT (protocol[Title] OR preprint[Publication Type] OR "Retracted Publication"[Publication Type])
+
+collection:
+  mode: discovery-with-abstracts
+  preserve: [literal-query, query-translation, ordered-pmids, raw-esearch-json, raw-efetch-xml, abstract-text, request-timestamps, response-sha256]
+  no_synthesis: true
